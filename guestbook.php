@@ -56,19 +56,24 @@ try {
     <hr/>
     <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $email = $_POST['email'];
-        $text = $_POST['text'];
-        $admin = isset($_POST['admin']) ? 1 : 0;
-        echo(userIsAdmin($conn));
-        if ($admin) {
-            $color = $_POST['color'];
-        } else {
-            $color = "red";
-        }
-        $conn->query(
-            "INSERT INTO `entries`(`email`, `color`, `admin`, `text`) 
+//        checks voor een geldig email adress
+        if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            $email = $_POST['email'];
+            $text = $_POST['text'];
+            $admin = isset($_POST['admin']) ? 1 : 0;
+            echo(userIsAdmin($conn));
+            if ($admin) {
+                $color = $_POST['color'];
+            } else {
+                $color = "red";
+            }
+            $conn->query(
+                "INSERT INTO `entries`(`email`, `color`, `admin`, `text`) 
                                         VALUES ('$email', '$color', '$admin', '$text');"
-        );
+            );
+        } else {
+            die('geef een geldig email adress');
+        }
     }
 
 
